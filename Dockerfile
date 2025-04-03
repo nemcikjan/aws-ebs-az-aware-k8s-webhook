@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o myapp
+RUN go build -o aws-ebs-az-aware-webhook
 
 # Use a minimal base image for the final build
 FROM alpine:latest
@@ -21,10 +21,10 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copy the compiled binary from the builder stage
-COPY --from=builder /app/myapp .
+COPY --from=builder /app/aws-ebs-az-aware-webhook .
 
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./myapp"]
+CMD ["./aws-ebs-az-aware-webhook"]

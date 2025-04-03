@@ -1,5 +1,5 @@
 # Use the official Golang image as the build stage
-FROM golang:1.24-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -11,8 +11,11 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
+ARG TARGETOS
+ARG TARGETARCH
 # Build the Go app
-RUN go build -o aws-ebs-az-aware-webhook
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH \
+    go build -o aws-ebs-az-aware-webhook
 
 # Use a minimal base image for the final build
 FROM alpine:latest

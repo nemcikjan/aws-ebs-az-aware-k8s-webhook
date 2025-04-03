@@ -1,5 +1,5 @@
 # Use the official Golang image as the build stage
-FROM golang:1.23 AS builder
+FROM golang:1.24-alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -18,7 +18,7 @@ RUN go build -o aws-ebs-az-aware-webhook
 FROM alpine:latest
 
 # Set the working directory in the final image
-WORKDIR /root/
+WORKDIR /root
 
 # Copy the compiled binary from the builder stage
 COPY --from=builder /app/aws-ebs-az-aware-webhook .

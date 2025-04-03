@@ -34,4 +34,4 @@ jobs:
         with:
           push: true
           tags: ${{ github.actor }}/aws-ebs-az-aware-webhook:${{ github.sha }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64

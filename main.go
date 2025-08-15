@@ -105,7 +105,8 @@ func createNodeAffinityPatch(existingAffinity *corev1.Affinity, zones []string) 
 
 	var patches []map[string]interface{}
 
-	if existingAffinity == nil || existingAffinity.NodeAffinity == nil {
+	switch {
+	case existingAffinity == nil:
 		patches = append(patches, map[string]interface{}{
 			"op":   "add",
 			"path": "/spec/affinity",
@@ -117,7 +118,17 @@ func createNodeAffinityPatch(existingAffinity *corev1.Affinity, zones []string) 
 				},
 			},
 		})
-	} else {
+	case existingAffinity.NodeAffinity == nil:
+		patches = append(patches, map[string]interface{}{
+			"op":   "add",
+			"path": "/spec/affinity/nodeAffinity",
+			"value": &corev1.NodeAffinity{
+				RequiredDuringSchedulingIgnoredDuringExecution: &corev1.NodeSelector{
+					NodeSelectorTerms: nodeSelectorTerms,
+				},
+			},
+		})
+	default:
 		patches = append(patches, map[string]interface{}{
 			"op":    "add",
 			"path":  "/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms/-",
